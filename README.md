@@ -33,10 +33,24 @@ cargo install pipeview
 ```
 
 <details>
-<summary>Build from source</summary>
+<summary>Other install methods</summary>
+
+**Homebrew** (macOS/Linux):
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/pipeview.git
+brew install jasonm4130/tap/pipeview
+```
+
+**Shell one-liner** (download pre-built binary):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/jasonm4130/pipeview/main/install.sh | sh
+```
+
+**Build from source:**
+
+```bash
+git clone https://github.com/jasonm4130/pipeview.git
 cd pipeview
 cargo build --release
 # Binary at target/release/pipeview
