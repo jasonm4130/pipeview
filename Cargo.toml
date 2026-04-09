@@ -1,0 +1,19 @@
+[package]
+name = "pipeview"
+version = "0.1.0"
+edition = "2021"
+description = "Real-time pipeline debugger — pv shows bytes, pipeview shows your data"
+license = "MIT"
+keywords = ["cli", "pipeline", "tui", "debugging"]
+categories = ["command-line-utilities", "development-tools"]
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+ratatui = "0.29"
+crossterm = "0.28"
+serde_json = "1"
+
+[profile.release]
+opt-level = 3
+lto = true
+strip = true
