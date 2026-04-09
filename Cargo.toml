@@ -1,6 +1,6 @@
 [package]
 name = "pipeview"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Real-time pipeline debugger — pv shows bytes, pipeview shows your data"
 license = "MIT"
