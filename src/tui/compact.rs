@@ -73,11 +73,13 @@ pub fn render(frame: &mut Frame, snap: &StatsSnapshot, samples: &[String], app: 
     frame.render_widget(format_box, stats_chunks[3]);
 
     // --- Sparkline ---
-    let sparkline_data: Vec<u64> = snap
-        .sparkline
-        .iter()
-        .map(|&v| v as u64)
-        .collect();
+    // If sparkline has few entries but data has flowed, fill with effective throughput
+    let sparkline_data: Vec<u64> = if snap.sparkline.len() <= 2 && snap.total_lines > 0 {
+        let effective = snap.effective_throughput_lines() as u64;
+        vec![effective; 10]
+    } else {
+        snap.sparkline.iter().map(|&v| v as u64).collect()
+    };
     let sparkline = Sparkline::default()
         .block(
             Block::default()

@@ -91,11 +91,12 @@ pub fn render(frame: &mut Frame, snap: &StatsSnapshot, samples: &[String], app: 
     frame.render_widget(avg_box, stats_chunks[5]);
 
     // --- Sparkline ---
-    let sparkline_data: Vec<u64> = snap
-        .sparkline
-        .iter()
-        .map(|&v| v as u64)
-        .collect();
+    let sparkline_data: Vec<u64> = if snap.sparkline.len() <= 2 && snap.total_lines > 0 {
+        let effective = snap.effective_throughput_lines() as u64;
+        vec![effective; 20]
+    } else {
+        snap.sparkline.iter().map(|&v| v as u64).collect()
+    };
     let sparkline = Sparkline::default()
         .block(
             Block::default()
