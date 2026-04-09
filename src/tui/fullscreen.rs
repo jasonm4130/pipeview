@@ -27,7 +27,7 @@ pub fn render(frame: &mut Frame, snap: &StatsSnapshot, samples: &[String], app: 
     // --- Header ---
     let elapsed_str = format_elapsed(snap.elapsed_secs);
     let header_text = format!(
-        " pipeview \u{2502} fullscreen  elapsed: {} \u{2502} q to detach",
+        " pipespy \u{2502} fullscreen  elapsed: {} \u{2502} q to detach",
         elapsed_str
     );
     let header = Paragraph::new(header_text)

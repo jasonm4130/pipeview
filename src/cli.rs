@@ -1,9 +1,9 @@
 use clap::Parser;
 
 #[derive(Parser, Debug)]
-#[command(name = "pipeview")]
+#[command(name = "pipespy")]
 #[command(version)]
-#[command(about = "Real-time pipeline debugger — pv shows bytes, pipeview shows your data")]
+#[command(about = "Real-time pipeline debugger — pv shows bytes, pipespy shows your data")]
 pub struct Args {
     /// Start in fullscreen mode
     #[arg(short, long)]

@@ -1,4 +1,4 @@
-use pipeview::format::{self, Format};
+use pipespy::format::{self, Format};
 
 #[test]
 fn detects_json_lines() {

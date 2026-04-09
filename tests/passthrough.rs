@@ -9,7 +9,7 @@ fn stdout_matches_stdin_exactly() {
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
-        .expect("failed to spawn pipeview");
+        .expect("failed to spawn pipespy");
 
     let input = (1..=1000).map(|i| format!("line {i}")).collect::<Vec<_>>().join("\n") + "\n";
 
@@ -29,7 +29,7 @@ fn handles_empty_input() {
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
-        .expect("failed to spawn pipeview");
+        .expect("failed to spawn pipespy");
 
     drop(child.stdin.take());
 
@@ -45,7 +45,7 @@ fn handles_binary_data() {
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
-        .expect("failed to spawn pipeview");
+        .expect("failed to spawn pipespy");
 
     let input: Vec<u8> = (0..=255u8).cycle().take(4096).collect();
     let mut lined_input = Vec::new();

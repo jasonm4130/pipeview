@@ -1,12 +1,12 @@
 <div align="center">
 
-# pipeview
+# pipespy
 
 **Real-time pipeline debugger for your terminal.**
 
-`pv` shows bytes — `pipeview` shows your data.
+`pv` shows bytes — `pipespy` shows your data.
 
-[![Crates.io](https://img.shields.io/crates/v/pipeview.svg)](https://crates.io/crates/pipeview)
+[![Crates.io](https://img.shields.io/crates/v/pipespy.svg)](https://crates.io/crates/pipespy)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Built with Rust](https://img.shields.io/badge/built%20with-Rust-dea584.svg)](https://www.rust-lang.org/)
 
@@ -14,22 +14,22 @@
 
 ---
 
-Drop `pipeview` into any shell pipeline to instantly see what's flowing through — throughput, record samples, format detection, and more. Your data passes through **completely untouched**.
+Drop `pipespy` into any shell pipeline to instantly see what's flowing through — throughput, record samples, format detection, and more. Your data passes through **completely untouched**.
 
 ```bash
-cat events.jsonl | pipeview | jq '.users[]' | grep "active" > out.txt
+cat events.jsonl | pipespy | jq '.users[]' | grep "active" > out.txt
 ```
 
 <!-- TODO: Replace with actual recording
 <div align="center">
-  <img src="assets/demo.gif" alt="pipeview demo" width="800">
+  <img src="assets/demo.gif" alt="pipespy demo" width="800">
 </div>
 -->
 
 ## Install
 
 ```bash
-cargo install pipeview
+cargo install pipespy
 ```
 
 <details>
@@ -38,22 +38,22 @@ cargo install pipeview
 **Homebrew** (macOS/Linux):
 
 ```bash
-brew install jasonm4130/tap/pipeview
+brew install jasonm4130/tap/pipespy
 ```
 
 **Shell one-liner** (download pre-built binary):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jasonm4130/pipeview/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/jasonm4130/pipespy/main/install.sh | sh
 ```
 
 **Build from source:**
 
 ```bash
-git clone https://github.com/jasonm4130/pipeview.git
-cd pipeview
+git clone https://github.com/jasonm4130/pipespy.git
+cd pipespy
 cargo build --release
-# Binary at target/release/pipeview
+# Binary at target/release/pipespy
 ```
 
 </details>
@@ -62,14 +62,14 @@ cargo build --release
 
 ```bash
 # See what's flowing through your pipeline
-cat server.log | pipeview | grep ERROR > errors.txt
+cat server.log | pipespy | grep ERROR > errors.txt
 
 # Fullscreen mode with histogram and extended stats
-cat events.jsonl | pipeview --fullscreen | jq '.' > out.json
+cat events.jsonl | pipespy --fullscreen | jq '.' > out.json
 
 # Quiet mode for scripts — just the summary
-cat huge.jsonl | pipeview -q | jq '.' > out.json
-# pipeview: 1,204,831 lines | 482MB | 14.2s | 33.9MB/s
+cat huge.jsonl | pipespy -q | jq '.' > out.json
+# pipespy: 1,204,831 lines | 482MB | 14.2s | 33.9MB/s
 ```
 
 ## Features
@@ -84,7 +84,7 @@ cat huge.jsonl | pipeview -q | jq '.' > out.json
 
 ### Format Detection
 
-pipeview automatically detects your data format and adapts:
+pipespy automatically detects your data format and adapts:
 
 | Format | Detection | Display |
 |--------|-----------|---------|
@@ -96,15 +96,15 @@ Override with `--json`, `--csv`, or `--no-detect`.
 
 ### Transparent Proxy
 
-Every byte that enters stdin exits stdout — **in order, unmodified**. pipeview renders entirely to stderr, so it never interferes with your data pipeline. Verified by integration tests.
+Every byte that enters stdin exits stdout — **in order, unmodified**. pipespy renders entirely to stderr, so it never interferes with your data pipeline. Verified by integration tests.
 
 ### Quiet Mode
 
 Skip the TUI entirely. Get a one-line summary when the pipeline completes:
 
 ```
-$ cat access.log | pipeview -q | awk '{print $1}' | sort -u > ips.txt
-pipeview: 8,412,093 lines | 1.2GB | 4.7s | 255.3MB/s
+$ cat access.log | pipespy -q | awk '{print $1}' | sort -u > ips.txt
+pipespy: 8,412,093 lines | 1.2GB | 4.7s | 255.3MB/s
 ```
 
 ## Keyboard Shortcuts
@@ -117,7 +117,7 @@ pipeview: 8,412,093 lines | 1.2GB | 4.7s | 255.3MB/s
 ## CLI Reference
 
 ```
-pipeview [OPTIONS]
+pipespy [OPTIONS]
 
 Options:
   -f, --fullscreen        Start in fullscreen mode
@@ -151,7 +151,7 @@ The TUI thread never touches the data path. Rendering to stderr means the altern
 
 ## Comparison
 
-| | `pv` | `pipeview` |
+| | `pv` | `pipespy` |
 |---|---|---|
 | Shows bytes transferred | :white_check_mark: | :white_check_mark: |
 | Shows line count | :x: | :white_check_mark: |

@@ -15,16 +15,16 @@ jobs:
         include:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-            name: pipeview-linux-amd64
+            name: pipespy-linux-amd64
           - target: aarch64-unknown-linux-gnu
             os: ubuntu-latest
-            name: pipeview-linux-arm64
+            name: pipespy-linux-arm64
           - target: x86_64-apple-darwin
             os: macos-latest
-            name: pipeview-darwin-amd64
+            name: pipespy-darwin-amd64
           - target: aarch64-apple-darwin
             os: macos-latest
-            name: pipeview-darwin-arm64
+            name: pipespy-darwin-arm64
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -49,7 +49,7 @@ jobs:
       - name: Package
         run: |
           cd target/${{ matrix.target }}/release
-          tar czf ../../../${{ matrix.name }}.tar.gz pipeview
+          tar czf ../../../${{ matrix.name }}.tar.gz pipespy
           cd ../../..
 
       - name: Upload artifact
@@ -85,10 +85,10 @@ jobs:
       - name: Compute SHA256 hashes
         id: hashes
         run: |
-          echo "darwin_arm64=$(sha256sum pipeview-darwin-arm64.tar.gz | awk '{print $1}')" >> "$GITHUB_OUTPUT"
-          echo "darwin_amd64=$(sha256sum pipeview-darwin-amd64.tar.gz | awk '{print $1}')" >> "$GITHUB_OUTPUT"
-          echo "linux_amd64=$(sha256sum pipeview-linux-amd64.tar.gz | awk '{print $1}')" >> "$GITHUB_OUTPUT"
-          echo "linux_arm64=$(sha256sum pipeview-linux-arm64.tar.gz | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          echo "darwin_arm64=$(sha256sum pipespy-darwin-arm64.tar.gz | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          echo "darwin_amd64=$(sha256sum pipespy-darwin-amd64.tar.gz | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          echo "linux_amd64=$(sha256sum pipespy-linux-amd64.tar.gz | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          echo "linux_arm64=$(sha256sum pipespy-linux-arm64.tar.gz | awk '{print $1}')" >> "$GITHUB_OUTPUT"
 
       - name: Extract version from tag
         id: version
@@ -100,39 +100,39 @@ jobs:
 
       - name: Update formula
         run: |
-          cat > homebrew-tap/Formula/pipeview.rb << 'FORMULA'
+          cat > homebrew-tap/Formula/pipespy.rb << 'FORMULA'
           class Pipeview < Formula
-            desc "Real-time pipeline debugger — pv shows bytes, pipeview shows your data"
-            homepage "https://github.com/jasonm4130/pipeview"
+            desc "Real-time pipeline debugger — pv shows bytes, pipespy shows your data"
+            homepage "https://github.com/jasonm4130/pipespy"
             version "${{ steps.version.outputs.version }}"
             license "MIT"
 
             on_macos do
               if Hardware::CPU.arm?
-                url "https://github.com/jasonm4130/pipeview/releases/download/v#{version}/pipeview-darwin-arm64.tar.gz"
+                url "https://github.com/jasonm4130/pipespy/releases/download/v#{version}/pipespy-darwin-arm64.tar.gz"
                 sha256 "${{ steps.hashes.outputs.darwin_arm64 }}"
               else
-                url "https://github.com/jasonm4130/pipeview/releases/download/v#{version}/pipeview-darwin-amd64.tar.gz"
+                url "https://github.com/jasonm4130/pipespy/releases/download/v#{version}/pipespy-darwin-amd64.tar.gz"
                 sha256 "${{ steps.hashes.outputs.darwin_amd64 }}"
               end
             end
 
             on_linux do
               if Hardware::CPU.arm?
-                url "https://github.com/jasonm4130/pipeview/releases/download/v#{version}/pipeview-linux-arm64.tar.gz"
+                url "https://github.com/jasonm4130/pipespy/releases/download/v#{version}/pipespy-linux-arm64.tar.gz"
                 sha256 "${{ steps.hashes.outputs.linux_arm64 }}"
               else
-                url "https://github.com/jasonm4130/pipeview/releases/download/v#{version}/pipeview-linux-amd64.tar.gz"
+                url "https://github.com/jasonm4130/pipespy/releases/download/v#{version}/pipespy-linux-amd64.tar.gz"
                 sha256 "${{ steps.hashes.outputs.linux_amd64 }}"
               end
             end
 
             def install
-              bin.install "pipeview"
+              bin.install "pipespy"
             end
 
             test do
-              assert_match "pipeview", shell_output("#{bin}/pipeview --version")
+              assert_match "pipespy", shell_output("#{bin}/pipespy --version")
             end
           end
           FORMULA
@@ -142,6 +142,6 @@ jobs:
           cd homebrew-tap
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Formula/pipeview.rb
-          git commit -m "pipeview ${{ steps.version.outputs.version }}"
+          git add Formula/pipespy.rb
+          git commit -m "pipespy ${{ steps.version.outputs.version }}"
           git push

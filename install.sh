@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-REPO="jasonm4130/pipeview"
+REPO="jasonm4130/pipespy"
 INSTALL_DIR="${INSTALL_DIR:-/usr/local/bin}"
 
 # Detect OS and architecture
@@ -20,34 +20,34 @@ case "$ARCH" in
     *)               echo "Unsupported architecture: $ARCH"; exit 1 ;;
 esac
 
-BINARY_NAME="pipeview-${OS_NAME}-${ARCH_NAME}"
+BINARY_NAME="pipespy-${OS_NAME}-${ARCH_NAME}"
 
 # Get latest release tag
 LATEST=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
 
 if [ -z "$LATEST" ]; then
     echo "Error: Could not determine latest release."
-    echo "Try: cargo install pipeview"
+    echo "Try: cargo install pipespy"
     exit 1
 fi
 
 URL="https://github.com/${REPO}/releases/download/${LATEST}/${BINARY_NAME}.tar.gz"
 
-echo "Installing pipeview ${LATEST} (${OS_NAME}/${ARCH_NAME})..."
+echo "Installing pipespy ${LATEST} (${OS_NAME}/${ARCH_NAME})..."
 
 TMPDIR=$(mktemp -d)
 trap 'rm -rf "$TMPDIR"' EXIT
 
-curl -fsSL "$URL" -o "${TMPDIR}/pipeview.tar.gz"
-tar xzf "${TMPDIR}/pipeview.tar.gz" -C "$TMPDIR"
+curl -fsSL "$URL" -o "${TMPDIR}/pipespy.tar.gz"
+tar xzf "${TMPDIR}/pipespy.tar.gz" -C "$TMPDIR"
 
 if [ -w "$INSTALL_DIR" ]; then
-    mv "${TMPDIR}/pipeview" "${INSTALL_DIR}/pipeview"
+    mv "${TMPDIR}/pipespy" "${INSTALL_DIR}/pipespy"
 else
-    sudo mv "${TMPDIR}/pipeview" "${INSTALL_DIR}/pipeview"
+    sudo mv "${TMPDIR}/pipespy" "${INSTALL_DIR}/pipespy"
 fi
 
-chmod +x "${INSTALL_DIR}/pipeview"
+chmod +x "${INSTALL_DIR}/pipespy"
 
-echo "Installed pipeview to ${INSTALL_DIR}/pipeview"
-echo "Run 'pipeview --help' to get started."
+echo "Installed pipespy to ${INSTALL_DIR}/pipespy"
+echo "Run 'pipespy --help' to get started."

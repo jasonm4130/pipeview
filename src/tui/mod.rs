@@ -163,7 +163,7 @@ pub fn run_tui(
         0.0
     };
     eprintln!(
-        "pipeview: {} lines | {} | {:.1}s | {}/s",
+        "pipespy: {} lines | {} | {:.1}s | {}/s",
         format_number(snap.total_lines),
         format_bytes(snap.total_bytes),
         elapsed,

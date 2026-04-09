@@ -4,10 +4,10 @@ use std::sync::Arc;
 use std::thread;
 
 use clap::Parser;
-use pipeview::buffer::SharedBuffer;
-use pipeview::cli::Args;
-use pipeview::stats::StatsCollector;
-use pipeview::{pipeline, tui};
+use pipespy::buffer::SharedBuffer;
+use pipespy::cli::Args;
+use pipespy::stats::StatsCollector;
+use pipespy::{pipeline, tui};
 
 fn main() {
     let args = Args::parse();
@@ -49,7 +49,7 @@ fn main() {
         let rate = if elapsed > 0.0 { snap.total_bytes as f64 / elapsed } else { 0.0 };
         let rate_str = format_bytes(rate as u64);
         eprintln!(
-            "pipeview: {} lines | {} | {:.1}s | {}/s",
+            "pipespy: {} lines | {} | {:.1}s | {}/s",
             format_number(snap.total_lines),
             bytes_str,
             elapsed,
