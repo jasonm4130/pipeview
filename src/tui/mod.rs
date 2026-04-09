@@ -1,4 +1,5 @@
 use std::io::stderr;
+use std::os::fd::AsRawFd;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
@@ -6,9 +7,33 @@ use std::time::{Duration, Instant};
 use crossterm::{
     event::{self, Event, KeyCode},
     execute,
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+    terminal::{EnterAlternateScreen, LeaveAlternateScreen},
 };
 use ratatui::{backend::CrosstermBackend, Terminal};
+
+/// Enable raw mode on a specific fd (stderr) instead of stdin.
+/// Returns the original termios to restore later.
+fn enable_raw_mode_on_fd(fd: i32) -> std::io::Result<libc::termios> {
+    unsafe {
+        let mut orig: libc::termios = std::mem::zeroed();
+        if libc::tcgetattr(fd, &mut orig) != 0 {
+            return Err(std::io::Error::last_os_error());
+        }
+        let mut raw = orig;
+        libc::cfmakeraw(&mut raw);
+        if libc::tcsetattr(fd, libc::TCSANOW, &raw) != 0 {
+            return Err(std::io::Error::last_os_error());
+        }
+        Ok(orig)
+    }
+}
+
+/// Restore terminal mode from saved termios.
+fn restore_terminal_mode(fd: i32, orig: &libc::termios) {
+    unsafe {
+        libc::tcsetattr(fd, libc::TCSANOW, orig);
+    }
+}
 
 use crate::buffer::SharedBuffer;
 use crate::format::{self, Format};
@@ -66,12 +91,13 @@ pub fn run_tui(
     force_csv: bool,
     no_detect: bool,
 ) {
-    // Enable raw mode and enter alternate screen on stderr
-    enable_raw_mode().expect("failed to enable raw mode");
-    let mut stderr = stderr();
-    execute!(stderr, EnterAlternateScreen).expect("failed to enter alternate screen");
+    // Enable raw mode on stderr (not stdin, which is the data pipe)
+    let stderr_fd = stderr().as_raw_fd();
+    let orig_termios = enable_raw_mode_on_fd(stderr_fd).expect("failed to enable raw mode on stderr");
+    let mut stderr_handle = stderr();
+    execute!(stderr_handle, EnterAlternateScreen).expect("failed to enter alternate screen");
 
-    let backend = CrosstermBackend::new(stderr);
+    let backend = CrosstermBackend::new(stderr_handle);
     let mut terminal = Terminal::new(backend).expect("failed to create terminal");
 
     let mut app = App::new(fullscreen, force_json, force_csv, no_detect, Arc::clone(&done));
@@ -123,7 +149,7 @@ pub fn run_tui(
     }
 
     // Restore terminal
-    disable_raw_mode().expect("failed to disable raw mode");
+    restore_terminal_mode(stderr_fd, &orig_termios);
     execute!(terminal.backend_mut(), LeaveAlternateScreen)
         .expect("failed to leave alternate screen");
     terminal.show_cursor().expect("failed to show cursor");
