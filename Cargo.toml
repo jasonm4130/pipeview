@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2021"
 description = "Real-time pipeline debugger — pv shows bytes, pipeview shows your data"
 license = "MIT"
+repository = "https://github.com/jasonm4130/pipeview"
+homepage = "https://github.com/jasonm4130/pipeview"
+readme = "README.md"
 keywords = ["cli", "pipeline", "tui", "debugging"]
 categories = ["command-line-utilities", "development-tools"]
 
