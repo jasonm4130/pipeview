@@ -1,5 +1,6 @@
 mod buffer;
 mod cli;
+mod format;
 mod stats;
 
 use clap::Parser;
